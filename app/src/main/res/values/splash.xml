@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.App.Starting" parent="Theme.MyMovieApp">
+        <item name="windowSplashScreenBackground">#0F0F00</item>
+
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_android_black_24dp</item>
+
+        <item name="postSplashScreenTheme">@style/Theme.MyMovieApp</item>
+
+    </style>
+
+</resources>
