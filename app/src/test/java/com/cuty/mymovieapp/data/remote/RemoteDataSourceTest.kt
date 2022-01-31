@@ -11,17 +11,19 @@ import org.junit.Test
 
 class RemoteDataSourceTest{
 
+    lateinit var remoteDataSource: RemoteDataSource
 
     @Before
     fun setup(){
         print("setup lauched")
+        remoteDataSource = RemoteDataSource()
     }
 
     @Test
-    fun getTrailers(){
+    fun getPopular(){
         //print(request)
         runBlocking {
-            val request = RetrofitService.webService.getPopularMovies()
+            val request = remoteDataSource.getPopularMovies()
             print(request)
             Assert.assertNotNull(request)
         }
@@ -30,7 +32,24 @@ class RemoteDataSourceTest{
     @Test
     fun getVideos(){
         runBlocking {
-            val request = RetrofitService.webService.getVideos(634649)
+            val request = remoteDataSource.getTrailer(634649)
+            print(request)
+            Assert.assertNotNull(request)
+        }
+    }
+    @Test
+    fun dontGetTRailers(){
+        runBlocking {
+            val request = remoteDataSource.getTrailer(730154)
+            print(request)
+            Assert.assertNull(request)
+        }
+    }
+
+    @Test
+    fun getTopRated(){
+        runBlocking {
+            val request = remoteDataSource.getTopRated()
             print(request)
             Assert.assertNotNull(request)
         }

@@ -8,6 +8,9 @@ object Constants {
     //apiurl
     const val API_URL = "$BASE_URL/3/movie/"
 
+    //url of horror
+    const val URL_GENRES = "$BASE_URL/3/discover/"
+
     //image urlbase
     const val IMG_URL = "https://image.tmdb.org/t/p/original"
 }

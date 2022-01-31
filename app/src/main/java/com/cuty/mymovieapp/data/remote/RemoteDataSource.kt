@@ -10,4 +10,8 @@ class RemoteDataSource() :RemoteDataSourceInt {
     override suspend fun getTrailer(id:Int): Video {
         return RetrofitService.webService.getVideos(id)
     }
+
+    override suspend fun getTopRated(): MovieRequest {
+        return RetrofitService.webService.getTopRated()
+    }
 }

@@ -1,6 +1,7 @@
 package com.cuty.mymovieapp.data.local
 
 import com.cuty.mymovieapp.data.models.Movie
+import com.cuty.mymovieapp.data.models.TopRated
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -15,5 +16,9 @@ class LocalDataSource @Inject constructor(var appdatadase:AppDatabase): LocalDat
 
     override suspend fun deleteMovie(item:Movie) {
         return appdatadase.localDatabaseDao().deleteItem(item)
+    }
+
+    override suspend fun getTopRated(): Flow<List<TopRated>> {
+        return appdatadase.localDatabaseDao().getTopRated()
     }
 }
