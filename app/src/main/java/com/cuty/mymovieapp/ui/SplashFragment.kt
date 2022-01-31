@@ -1,26 +1,27 @@
 package com.cuty.mymovieapp.ui
 
-import android.animation.ObjectAnimator
-import android.animation.PropertyValuesHolder
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.activity.viewModels
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.cuty.mymovieapp.R
+import com.cuty.mymovieapp.animations.Animator
 import com.cuty.mymovieapp.databinding.FragmentSplashBinding
 import com.cuty.mymovieapp.presenter.SplashViewModel
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
 class SplashFragment : Fragment() {
-    private val viewmodel : SplashViewModel by viewModels()
+    private val viewmodel: SplashViewModel by viewModels()
     lateinit var binding: FragmentSplashBinding
-    lateinit var mLogo : ImageView
+    lateinit var mLogo: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -37,35 +38,24 @@ class SplashFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSplashBinding.bind(view)
         mLogo = binding.mlogo
-        translater()
-        rotater()
-        scaler()
+        val animator = Animator()
+        animator.totalAnimations(mLogo)
+        lifecycleScope.launch {
+            viewmodel.isLoading.catch {}
+                .collect { it ->
+                    if (!it) {
+                        nextFragment()
+
+                    }
+                }
+        }
+
+
 
     }
-    private fun translater(){
-        val animator = ObjectAnimator.ofFloat(mLogo,View.TRANSLATION_Y,300f)
-        animator.repeatCount = 1
-        animator.repeatMode = ObjectAnimator.REVERSE
-        animator.start()
-    }
-    private fun rotater() {
-        val animator  = ObjectAnimator.ofFloat(mLogo, View.ROTATION,-720f,0f)
-        animator.duration = 1000L
-        animator.start()
-    }
-    private fun scaler() {
-        val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X,0.3f)
-        val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y,0.3f)
-        val animator = ObjectAnimator.ofPropertyValuesHolder(
-            mLogo,scaleX,scaleY
-        )
-        animator.duration = 1000L
-        animator.repeatCount = 1
-        animator.repeatMode = ObjectAnimator.REVERSE
-        animator.start()
-    }
-    private fun nextFragment(){
-        //findNavController().navigate()
+
+    private fun nextFragment() {
+        findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
     }
 
 }
