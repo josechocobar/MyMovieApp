@@ -4,17 +4,28 @@ import com.cuty.mymovieapp.data.models.MovieRequest
 import com.cuty.mymovieapp.data.models.Video
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface WebService {
 
-    @GET("popular?api_key=0a8956c5ce74c43236f60c0fe039e3c1&language=en-US&page=1")
-    suspend fun getPopularMovies():MovieRequest
+    @GET("popular?")
+    suspend fun getPopularMovies(
+        @Query("api_key") key: String,
+        @Query("language") lang: String,
+        @Query("page") page: Int
+    ): MovieRequest
 
-    //@GET("/3/movie/")
-    //suspend fun getPopulars(@Query(value = "$API_KEY"))
-    @GET("{id}/videos?api_key=0a8956c5ce74c43236f60c0fe039e3c1&language=en-US")
-    suspend fun getVideos(@Path("id")id:Int): Video
+    @GET("{id}/videos?")
+    suspend fun getVideos(
+        @Path("id") id: Int,
+        @Query("api_key") key: String,
+        @Query("language") lang: String
+    ): Video
 
-    @GET("top_rated?api_key=0a8956c5ce74c43236f60c0fe039e3c1&language=en-US&page=1")
-    suspend fun getTopRated():MovieRequest
+    @GET("top_rated?")
+    suspend fun getTopRated(
+        @Query("api_key") key: String,
+        @Query("language") lang: String,
+        @Query("page") page: Int
+    ): MovieRequest
 }

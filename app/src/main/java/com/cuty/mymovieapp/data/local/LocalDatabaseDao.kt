@@ -14,7 +14,7 @@ interface LocalDatabaseDao {
     suspend fun getMovieById(idroom:Int):Movie
 
     @Query("SELECT * FROM movie_top_rated ORDER BY idroom")
-    suspend fun getTopRated():Flow<List<TopRated>>
+    fun getTopRated():Flow<List<TopRated>>
 
     @Query("SELECT * FROM movie_table WHERE title LIKE '%' || :title || '%'")
     fun getMovieListByName(title: String):Flow<List<Movie>>
