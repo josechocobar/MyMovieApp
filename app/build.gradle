@@ -87,4 +87,10 @@ dependencies {
     // For local unit tests
     testImplementation 'com.google.dagger:hilt-android-testing:2.38.1'
     kapt 'com.google.dagger:hilt-compiler:2.38.1'
+    androidTestImplementation "io.mockk:mockk-android:1.12.0"
+    testImplementation "io.mockk:mockk-android:1.12.0"
+
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 }
