@@ -6,14 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.cuty.mymovieapp.R
 import com.cuty.mymovieapp.data.models.Movie
+import com.cuty.mymovieapp.databinding.FragmentHomeBinding
 import com.cuty.mymovieapp.ui.recycler.PopularAdapter
 
 
 class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
 
-
+    private var binding: FragmentHomeBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -28,6 +31,16 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
     }
 
     override fun onMovieClick(item: Movie, position: Int) {
-        Log.d("CLICK","CLICK")
+        Log.d("CLICK", "CLICK")
+    }
+
+    private fun setUpRecyclerView() {
+        binding?.rvPopular?.layoutManager = LinearLayoutManager(requireContext())
+        binding?.rvPopular?.addItemDecoration(
+            DividerItemDecoration(
+                requireContext(),
+                DividerItemDecoration.VERTICAL
+            )
+        )
     }
 }
