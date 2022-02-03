@@ -7,8 +7,9 @@ import android.content.Intent
 import android.net.*
 import android.os.Build
 import androidx.lifecycle.LiveData
+import javax.inject.Inject
 
-class NetworkConnection(private var connectivityManager : ConnectivityManager) : LiveData<Boolean>() {
+class NetworkConnection @Inject constructor(private var connectivityManager : ConnectivityManager) : LiveData<Boolean>() {
     private lateinit var networkCallback: ConnectivityManager.NetworkCallback
     override fun onActive() {
         super.onActive()

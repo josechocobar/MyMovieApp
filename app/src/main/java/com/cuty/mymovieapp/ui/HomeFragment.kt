@@ -1,22 +1,36 @@
 package com.cuty.mymovieapp.ui
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.cuty.mymovieapp.R
+import com.cuty.mymovieapp.application.internetchecker.NetworkConnection
 import com.cuty.mymovieapp.data.models.Movie
 import com.cuty.mymovieapp.databinding.FragmentHomeBinding
+import com.cuty.mymovieapp.presenter.MainViewModel
 import com.cuty.mymovieapp.ui.recycler.PopularAdapter
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
 
     private var binding: FragmentHomeBinding? = null
+    val viewmodel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -30,17 +44,81 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeInternet()
+
+
+    }
+
+    fun observeInternet() {
+        val connectivityManager =
+            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkConnection = NetworkConnection(connectivityManager)
+        networkConnection.observe(viewLifecycleOwner, { isConnected ->
+            if (isConnected) {
+                Log.d("INTERNET", "OK connection")
+            } else {
+                Log.d("INTERNET", "Disconnected")
+            }
+        })
+    }
+
     override fun onMovieClick(item: Movie, position: Int) {
         Log.d("CLICK", "CLICK")
     }
 
-    private fun setUpRecyclerView() {
-        binding?.rvPopular?.layoutManager = LinearLayoutManager(requireContext())
-        binding?.rvPopular?.addItemDecoration(
-            DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
-            )
+    private fun setupSearchView(view: SearchView) {
+        view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(name: String): Boolean {
+                setUpNameObserver(name)
+                return false
+            }
+
+            override fun onQueryTextChange(name: String): Boolean {
+                setUpNameObserver(name)
+                return false
+            }
+        })
+
+    }
+
+    private fun setUpNameObserver(name: String) {
+        viewmodel.viewModelScope.launch {
+            viewmodel.getMovieByName(name).catch { }
+                .map {
+                    setUpRecyclerView(it)
+                }
+                .collect()
+        }
+    }
+
+    private fun setUpPopularObserver(typeOfMovie: Int) {
+        viewmodel.viewModelScope.launch {
+            viewmodel.getMoviebyType(typeOfMovie).catch { }
+                .map {
+                    setUpRecyclerView(it)
+                }
+                .collect()
+
+        }
+    }
+
+    fun setUpRecyclerView(value: List<Movie>) {
+        binding?.rvSuggestions?.adapter = PopularAdapter(
+            requireContext(),
+            value,
+            this@HomeFragment
         )
     }
-}
+}/*
+        .catch { }
+                .map {value->
+                    binding?.rvSuggestions?.adapter = PopularAdapter(
+                        requireContext(),
+                        value,
+                        this@HomeFragment
+                    )
+
+                }
+                .collect()

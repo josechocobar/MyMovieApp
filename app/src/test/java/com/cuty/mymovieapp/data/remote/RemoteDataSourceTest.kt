@@ -40,14 +40,6 @@ class RemoteDataSourceTest{
             Assert.assertNotNull(request)
         }
     }
-    @Test
-    fun dontGetTRailers(){
-        runBlocking {
-            val request = remoteDataSource.getTrailer(730154,key,lang)
-            print(request)
-            Assert.assertNull(request)
-        }
-    }
 
     @Test
     fun getTopRated(){
