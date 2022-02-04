@@ -1,5 +1,7 @@
 package com.cuty.mymovieapp.data.domain
 
+import com.cuty.mymovieapp.data.local.LocalDataSource
+import com.cuty.mymovieapp.data.local.LocalDataSourceInterface
 import com.cuty.mymovieapp.data.local.LocalDatabaseDao
 import com.cuty.mymovieapp.data.models.Movie
 import com.cuty.mymovieapp.data.models.MovieRequest
@@ -10,21 +12,25 @@ import javax.inject.Inject
 
 class RepoImplementation @Inject constructor(
     val remoteDataSource: RemoteDataSourceInt,
-    val localDao: LocalDatabaseDao
+    val localDataSource: LocalDataSourceInterface
 ) : IRepo {
     override suspend fun getMovieList(key:String,lang:String,page:Int): MovieRequest {
         return remoteDataSource.getPopularMovies(key,lang,page)
     }
 
-    override suspend fun getMovieList(typeOfMovie: Int): Flow<List<Movie>> {
-        return localDao.getMovieList(typeOfMovie)
+    override fun getPopularMovieList(type: Boolean): Flow<List<Movie>> {
+        return localDataSource.getOnlyPopularMovies(true)
     }
 
-    override suspend fun getMovieLocalList(): Flow<List<Movie>> {
-        return localDao.getMovieList()
+    override fun getTopRatedMovieList(type: Boolean): Flow<List<Movie>> {
+        return localDataSource.getOnlyTopRatedMovies(true)
+    }
+
+    override fun getMovieLocalList(): Flow<List<Movie>> {
+        return localDataSource.getAllPopularMovies()
     }
     override suspend fun getMovieById(idroom:Int):Movie{
-        return localDao.getMovieById(idroom)
+        return localDataSource.getMovieById(idroom)
     }
 
     override suspend fun getTrailer(id: Int,key:String,lang:String): Video {
@@ -35,4 +41,27 @@ class RepoImplementation @Inject constructor(
         return remoteDataSource.getTopRated(key,lang,page)
     }
 
+    override fun getMovieByTitle(name: String): Flow<List<Movie>> {
+        return localDataSource.getMovieByTitle(name)
+    }
+
+    override suspend fun insertMovie(movie: Movie) {
+        localDataSource.insertMovie(movie)
+    }
+
+    override suspend fun deleteMovie(movie: Movie) {
+        localDataSource.deleteMovie(movie)
+    }
+
+    override suspend fun deleteAll() {
+        localDataSource.deleteAll()
+    }
+
+    override suspend fun existThisMovie(name: String): Boolean {
+        return localDataSource.existThisMovie(name)
+    }
+
+    override suspend fun getMovieByOriginalTitle(name: String): Movie {
+        return localDataSource.getMovieByOriginalTitle(name)
+    }
 }

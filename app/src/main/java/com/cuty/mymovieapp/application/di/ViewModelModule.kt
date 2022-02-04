@@ -1,9 +1,13 @@
 package com.cuty.mymovieapp.application.di
 
 import com.cuty.mymovieapp.data.domain.RepoImplementation
+import com.cuty.mymovieapp.data.local.AppDatabase
+import com.cuty.mymovieapp.data.local.LocalDataSource
+import com.cuty.mymovieapp.data.local.LocalDataSourceInterface
 import com.cuty.mymovieapp.data.local.LocalDatabaseDao
 import com.cuty.mymovieapp.data.remote.RemoteDataSource
 import com.cuty.mymovieapp.data.remote.RemoteDataSourceInt
+import com.cuty.mymovieapp.data.remote.cases.Cases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,13 +20,17 @@ object ViewModelModule {
 
     @Provides
     @ViewModelScoped
-    fun bindRepoImpl(dataSource: RemoteDataSourceInt,localDatabaseDao: LocalDatabaseDao):RepoImplementation{
-        return RepoImplementation(dataSource,localDatabaseDao)
+    fun bindRepoImpl(dataSource: RemoteDataSourceInt,localDataSource: LocalDataSource):RepoImplementation{
+        return RepoImplementation(dataSource,localDataSource)
     }
     @Provides
     @ViewModelScoped
     fun bindDataSourceImpl():RemoteDataSourceInt{
         return RemoteDataSource()
     }
-
+    @Provides
+    @ViewModelScoped
+    fun bindLocalDataSource(appDatabase: AppDatabase):LocalDataSourceInterface{
+        return LocalDataSource(appDatabase)
+    }
 }

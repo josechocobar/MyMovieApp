@@ -28,6 +28,8 @@ data class Movie(
     val video: Boolean,
     val vote_average: Double,
     val vote_count: Int,
-    @ColumnInfo(name = "type_of_movie")
-    var typeOfMovie: Int
+    @ColumnInfo(name = "popular")
+    var popular: Boolean,
+    @ColumnInfo(name = "top_rated")
+    var topRated: Boolean
 ) : Parcelable

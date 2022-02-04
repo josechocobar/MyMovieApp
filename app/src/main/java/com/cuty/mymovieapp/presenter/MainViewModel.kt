@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.cuty.mymovieapp.data.domain.RepoImplementation
 import com.cuty.mymovieapp.data.models.Movie
+import com.cuty.mymovieapp.data.remote.cases.Cases
 import com.cuty.mymovieapp.utils.Constants.API_KEY
 import com.cuty.mymovieapp.utils.Constants.LANG_ENG
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,32 +15,69 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val repoImplementation: RepoImplementation
+    private val repoImplementation: RepoImplementation,
 ) : ViewModel() {
 
-
-    var getPopularMovies: Flow<List<Movie>> = repoImplementation.localDao.getMovieList()
-    fun getMoviebyType(typeOfMovie: Int): Flow<List<Movie>> {
-        return repoImplementation.localDao.getMovieList(typeOfMovie)
+    var getListOfMovies: Flow<List<Movie>> = repoImplementation.getMovieLocalList()
+    fun getTopRatedMovieList() {
+        getListOfMovies = repoImplementation.getTopRatedMovieList(true)
     }
 
-    suspend fun getMovieByName(name: String): Flow<List<Movie>> {
-        return repoImplementation.localDao.getMovieListByName(name)
+    fun getPopularListOfMovies() {
+        getListOfMovies = repoImplementation.getPopularMovieList(true)
+    }
+    fun getAllMovies(){
+        getListOfMovies = repoImplementation.getMovieLocalList()
+    }
+
+    fun getMovieByName(name: String) {
+        getListOfMovies = repoImplementation.getMovieByTitle(name)
     }
 
 
     suspend fun actualDb() {
-        val fetchPopularMovieData = try {
-            repoImplementation.remoteDataSource.getPopularMovies(API_KEY, LANG_ENG, 1)
-        } catch (e: Exception) {
-            throw Exception("remote repo error", e)
+        actualizePopular()
+        actualizeTopRated()
+    }
+
+    suspend fun actualizePopular() {
+        for (i in 1..5) {
+            val fetchPopularMovieData = try {
+                repoImplementation.remoteDataSource.getPopularMovies(API_KEY, LANG_ENG, i)
+            } catch (e: Exception) {
+                throw Exception("remote repo error", e)
+            }
+            fetchPopularMovieData.results.let { list ->
+                repoImplementation.localDataSource.deleteAll()
+                list?.forEach { movie ->
+                    movie.popular = true
+                    repoImplementation.insertMovie(movie)
+                } ?: throw Exception("no results")
+            }
+            Log.d(ContentValues.TAG, "upgraded db")
         }
-        fetchPopularMovieData.results.let { list ->
-            repoImplementation.localDao.deleteAll()
-            list?.forEach { movie ->
-                repoImplementation.localDao.insertItem(movie)
+    }
+
+    suspend fun actualizeTopRated() {
+        for (i in 1..5) {
+            val fetchTopRated = try {
+                repoImplementation.getTopRated(API_KEY, LANG_ENG, i)
+            } catch (e: Exception) {
+                throw Exception("remote repo error", e)
+            }
+            fetchTopRated.results?.forEach { movie ->
+                val exist = repoImplementation.existThisMovie(movie.original_title)
+                if (!exist) {
+                    repoImplementation.insertMovie(movie)
+                }else{
+                    val eMovie = repoImplementation.getMovieByOriginalTitle(movie.original_title)
+                    eMovie.topRated = true
+                    repoImplementation.insertMovie(eMovie)
+                }
+
             } ?: throw Exception("no results")
         }
         Log.d(ContentValues.TAG, "upgraded db")
     }
+
 }

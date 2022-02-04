@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.cuty.mymovieapp.R
 import com.cuty.mymovieapp.application.internetchecker.NetworkConnection
@@ -19,7 +18,6 @@ import com.cuty.mymovieapp.databinding.FragmentHomeBinding
 import com.cuty.mymovieapp.presenter.MainViewModel
 import com.cuty.mymovieapp.ui.recycler.PopularAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
@@ -47,8 +45,7 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeInternet()
-
-
+        setupObserver()
     }
 
     fun observeInternet() {
@@ -67,6 +64,15 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
     override fun onMovieClick(item: Movie, position: Int) {
         Log.d("CLICK", "CLICK")
     }
+    private fun setupObserver(){
+        viewmodel.viewModelScope.launch {
+            viewmodel.getListOfMovies.catch {  }
+                .map {
+                    setUpRecyclerView(it)
+                }
+                .collect()
+        }
+    }
 
     private fun setupSearchView(view: SearchView) {
         view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -84,24 +90,14 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
     }
 
     private fun setUpNameObserver(name: String) {
-        viewmodel.viewModelScope.launch {
-            viewmodel.getMovieByName(name).catch { }
-                .map {
-                    setUpRecyclerView(it)
-                }
-                .collect()
-        }
+        viewmodel.getMovieByName(name)
     }
 
-    private fun setUpPopularObserver(typeOfMovie: Int) {
-        viewmodel.viewModelScope.launch {
-            viewmodel.getMoviebyType(typeOfMovie).catch { }
-                .map {
-                    setUpRecyclerView(it)
-                }
-                .collect()
-
-        }
+    private fun setUpPopular() {
+        viewmodel.getPopularListOfMovies()
+    }
+    private fun setupTopRated(){
+        viewmodel.getTopRatedMovieList()
     }
 
     fun setUpRecyclerView(value: List<Movie>) {
@@ -111,14 +107,5 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
             this@HomeFragment
         )
     }
-}/*
-        .catch { }
-                .map {value->
-                    binding?.rvSuggestions?.adapter = PopularAdapter(
-                        requireContext(),
-                        value,
-                        this@HomeFragment
-                    )
 
-                }
-                .collect()
+}
