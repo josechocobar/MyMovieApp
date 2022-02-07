@@ -32,4 +32,7 @@ object AppModule {
     @Provides
     fun provideYourConnectivityManager(@ApplicationContext context: Context) = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
+    @Singleton
+    @Provides
+    fun provideContext(@ApplicationContext context: Context) = context
 }

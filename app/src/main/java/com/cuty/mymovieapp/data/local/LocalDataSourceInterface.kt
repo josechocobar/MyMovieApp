@@ -1,12 +1,18 @@
 package com.cuty.mymovieapp.data.local
 
 import com.cuty.mymovieapp.data.models.Movie
-import com.cuty.mymovieapp.data.models.TopRated
 import kotlinx.coroutines.flow.Flow
 
 interface LocalDataSourceInterface {
-    suspend fun getAllPopularMovies(): Flow<List<Movie>>
+    fun getAllPopularMovies(): Flow<List<Movie>>
+    suspend fun getMovieById(idRoom:Int):Movie
+    fun getMovieByTitle(name:String):Flow<List<Movie>>
     suspend fun insertMovie(movie: Movie)
     suspend fun deleteMovie(item: Movie)
-    suspend fun getTopRated():Flow<List<TopRated>>
+    suspend fun deleteAll()
+    fun getOnlyPopularMovies(popular: Boolean): Flow<List<Movie>>
+    fun getOnlyTopRatedMovies(topRated:Boolean):Flow<List<Movie>>
+    suspend fun getMovieByOriginalTitle(name: String): Movie
+    suspend fun existThisMovie(name:String):Boolean
+
 }

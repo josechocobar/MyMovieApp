@@ -1,5 +1,6 @@
 package com.cuty.mymovieapp.data.remote.cases
 
-class Cases {
+import com.cuty.mymovieapp.data.models.Movie
 
+class Cases {
 }

@@ -3,7 +3,6 @@ package com.cuty.mymovieapp.data.models
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
@@ -28,5 +27,9 @@ data class Movie(
     @ColumnInfo(name = "video")
     val video: Boolean,
     val vote_average: Double,
-    val vote_count: Int
+    val vote_count: Int,
+    @ColumnInfo(name = "popular")
+    var popular: Boolean,
+    @ColumnInfo(name = "top_rated")
+    var topRated: Boolean
 ) : Parcelable
