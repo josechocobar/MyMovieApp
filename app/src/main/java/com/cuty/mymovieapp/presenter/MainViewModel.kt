@@ -5,20 +5,26 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.cuty.mymovieapp.data.domain.RepoImplementation
 import com.cuty.mymovieapp.data.models.Movie
+import com.cuty.mymovieapp.data.remote.TimeController.TimeControl
 import com.cuty.mymovieapp.data.remote.cases.Cases
 import com.cuty.mymovieapp.utils.Constants.API_KEY
 import com.cuty.mymovieapp.utils.Constants.LANG_ENG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import java.lang.Exception
+import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val repoImplementation: RepoImplementation,
+    private val repoImplementation: RepoImplementation,private var time:TimeControl
 ) : ViewModel() {
 
-    var getListOfMovies: Flow<List<Movie>> = repoImplementation.getMovieLocalList()
+    lateinit var getListOfMovies: Flow<List<Movie>>
+    init {
+        time.setTimecontrol()
+        getAllMovies()
+    }
     fun getTopRatedMovieList() {
         getListOfMovies = repoImplementation.getTopRatedMovieList(true)
     }
@@ -26,18 +32,37 @@ class MainViewModel @Inject constructor(
     fun getPopularListOfMovies() {
         getListOfMovies = repoImplementation.getPopularMovieList(true)
     }
-    fun getAllMovies(){
+
+    fun getAllMovies() {
         getListOfMovies = repoImplementation.getMovieLocalList()
     }
 
     fun getMovieByName(name: String) {
-        getListOfMovies = repoImplementation.getMovieByTitle(name)
+        getListOfMovies = if (name == "") {
+            repoImplementation.getMovieLocalList()
+        } else {
+            repoImplementation.getMovieByTitle(name)
+        }
+
     }
 
 
     suspend fun actualDb() {
-        actualizePopular()
-        actualizeTopRated()
+        if (!time.setFirstDb){
+            repoImplementation.localDataSource.deleteAll()
+            actualizePopular()
+            actualizeTopRated()
+            time.setFirstDb = true
+        }
+        if (time.decideTimeControl(LocalTime.now())){
+            repoImplementation.localDataSource.deleteAll()
+            actualizePopular()
+            actualizeTopRated()
+        }
+        else{
+            Log.d("MOVIES","La base de datos ya está actualizada")
+        }
+
     }
 
     suspend fun actualizePopular() {
@@ -48,7 +73,6 @@ class MainViewModel @Inject constructor(
                 throw Exception("remote repo error", e)
             }
             fetchPopularMovieData.results.let { list ->
-                repoImplementation.localDataSource.deleteAll()
                 list?.forEach { movie ->
                     movie.popular = true
                     repoImplementation.insertMovie(movie)
@@ -69,7 +93,7 @@ class MainViewModel @Inject constructor(
                 val exist = repoImplementation.existThisMovie(movie.original_title)
                 if (!exist) {
                     repoImplementation.insertMovie(movie)
-                }else{
+                } else {
                     val eMovie = repoImplementation.getMovieByOriginalTitle(movie.original_title)
                     eMovie.topRated = true
                     repoImplementation.insertMovie(eMovie)

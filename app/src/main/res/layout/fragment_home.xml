@@ -45,57 +45,49 @@
                 android:background="@drawable/search_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageButton
-            android:id="@+id/disney_group"
+        <TextView
+            android:id="@+id/tv_top_rated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Top Rated"
+            app:layout_constraintEnd_toEndOf="@id/bu_top_rated"
+            app:layout_constraintStart_toStartOf="@id/bu_top_rated"
+            app:layout_constraintTop_toBottomOf="@id/top_image_carousel" />
+
+        <Button
+            android:id="@+id/bu_top_rated"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="20dp"
-            app:layout_constraintEnd_toStartOf="@id/pixar_group"
+            app:layout_constraintEnd_toStartOf="@id/bu_popular"
             app:layout_constraintStart_toStartOf="@id/home_container"
+            app:layout_constraintTop_toBottomOf="@id/tv_top_rated" />
+
+        <TextView
+            android:id="@+id/tv_popular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Popular"
+            app:layout_constraintEnd_toEndOf="@id/bu_popular"
+            app:layout_constraintStart_toStartOf="@id/bu_popular"
             app:layout_constraintTop_toBottomOf="@id/top_image_carousel" />
 
-        <ImageButton
-            android:id="@+id/pixar_group"
+        <Button
+            android:id="@+id/bu_popular"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="20dp"
-            app:layout_constraintEnd_toStartOf="@id/marvel_group"
-            app:layout_constraintStart_toEndOf="@id/disney_group"
-            app:layout_constraintTop_toBottomOf="@id/top_image_carousel" />
-
-        <ImageButton
-            android:id="@+id/marvel_group"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            app:layout_constraintEnd_toStartOf="@id/stars_wars_group"
-            app:layout_constraintStart_toEndOf="@id/pixar_group"
-            app:layout_constraintTop_toBottomOf="@id/top_image_carousel" />
-
-        <ImageButton
-            android:id="@+id/stars_wars_group"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            app:layout_constraintEnd_toEndOf="@id/history_group"
-            app:layout_constraintStart_toEndOf="@id/marvel_group"
-            app:layout_constraintTop_toBottomOf="@id/top_image_carousel" />
-
-        <ImageButton
-            android:id="@+id/history_group"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="@id/home_container"
-            app:layout_constraintStart_toEndOf="@id/stars_wars_group"
-            app:layout_constraintTop_toBottomOf="@id/top_image_carousel" />
+            app:layout_constraintStart_toEndOf="@id/bu_top_rated"
+            app:layout_constraintTop_toBottomOf="@id/tv_popular" />
+
 
         <TextView
             android:id="@+id/tv_suggestions"
@@ -105,7 +97,7 @@
             android:text="Top"
             app:layout_constraintEnd_toEndOf="@id/home_container"
             app:layout_constraintStart_toStartOf="@id/home_container"
-            app:layout_constraintTop_toBottomOf="@id/stars_wars_group" />
+            app:layout_constraintTop_toBottomOf="@id/bu_popular" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_suggestions"

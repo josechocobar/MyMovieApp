@@ -8,9 +8,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.cuty.mymovieapp.R
 import com.cuty.mymovieapp.application.internetchecker.NetworkConnection
 import com.cuty.mymovieapp.data.models.Movie
@@ -36,7 +41,7 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
@@ -44,8 +49,12 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentHomeBinding.bind(view)
         observeInternet()
         setupObserver()
+        setupSearchView(binding!!.svSearchMovie)
+        setUpPopular(binding!!.buPopular,binding!!.buTopRated)
+        setupTopRated(binding!!.buTopRated,binding!!.buPopular)
     }
 
     fun observeInternet() {
@@ -55,6 +64,9 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
         networkConnection.observe(viewLifecycleOwner, { isConnected ->
             if (isConnected) {
                 Log.d("INTERNET", "OK connection")
+                viewmodel.viewModelScope.launch {
+                    viewmodel.actualDb()
+                }
             } else {
                 Log.d("INTERNET", "Disconnected")
             }
@@ -64,13 +76,13 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
     override fun onMovieClick(item: Movie, position: Int) {
         Log.d("CLICK", "CLICK")
     }
-    private fun setupObserver(){
-        viewmodel.viewModelScope.launch {
-            viewmodel.getListOfMovies.catch {  }
-                .map {
+
+    private fun setupObserver() {
+        lifecycle.coroutineScope.launch {
+            viewmodel.getListOfMovies
+                .collect{
                     setUpRecyclerView(it)
                 }
-                .collect()
         }
     }
 
@@ -78,11 +90,13 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
         view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(name: String): Boolean {
                 setUpNameObserver(name)
+                setupObserver()
                 return false
             }
 
             override fun onQueryTextChange(name: String): Boolean {
                 setUpNameObserver(name)
+                setupObserver()
                 return false
             }
         })
@@ -93,11 +107,22 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
         viewmodel.getMovieByName(name)
     }
 
-    private fun setUpPopular() {
-        viewmodel.getPopularListOfMovies()
+    private fun setUpPopular(popularButton: Button,topRatedButton: Button) {
+        popularButton.setOnClickListener {
+            viewmodel.getPopularListOfMovies()
+            setupObserver()
+            //popularButton.isEnabled = false
+            //topRatedButton.isEnabled = true
+        }
     }
-    private fun setupTopRated(){
-        viewmodel.getTopRatedMovieList()
+
+    private fun setupTopRated(topRatedButton: Button, popularButton: Button) {
+        topRatedButton.setOnClickListener {
+            viewmodel.getTopRatedMovieList()
+            observeInternet()
+            //topRatedButton.isEnabled = false
+            //popularButton.isEnabled = true
+        }
     }
 
     fun setUpRecyclerView(value: List<Movie>) {
@@ -106,6 +131,7 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
             value,
             this@HomeFragment
         )
+        binding!!.rvSuggestions.layoutManager = LinearLayoutManager(requireContext())
     }
 
 }
