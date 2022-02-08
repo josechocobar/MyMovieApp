@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.HomeFragment">
+    tools:context=".ui.HomeFragment"
+    android:background="@color/black">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/home_container"
@@ -54,16 +55,17 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="Top Rated"
+            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="@id/bu_top_rated"
             app:layout_constraintStart_toStartOf="@id/bu_top_rated"
             app:layout_constraintTop_toBottomOf="@id/top_image_carousel" />
 
-        <Button
+        <ImageButton
             android:id="@+id/bu_top_rated"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="20dp"
+            android:src="@drawable/ic_baseline_star_24"
             app:layout_constraintEnd_toStartOf="@id/bu_popular"
             app:layout_constraintStart_toStartOf="@id/home_container"
             app:layout_constraintTop_toBottomOf="@id/tv_top_rated" />
@@ -74,16 +76,18 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="Popular"
+            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="@id/bu_popular"
             app:layout_constraintStart_toStartOf="@id/bu_popular"
             app:layout_constraintTop_toBottomOf="@id/top_image_carousel" />
 
-        <Button
+        <ImageButton
             android:id="@+id/bu_popular"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="20dp"
+            android:src="@drawable/ic_popular"
             app:layout_constraintEnd_toEndOf="@id/home_container"
             app:layout_constraintStart_toEndOf="@id/bu_top_rated"
             app:layout_constraintTop_toBottomOf="@id/tv_popular" />
@@ -101,13 +105,14 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_suggestions"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:orientation="vertical"
+            android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="@id/home_container"
             app:layout_constraintEnd_toEndOf="@id/home_container"
             app:layout_constraintStart_toStartOf="@id/home_container"

@@ -9,5 +9,5 @@ data class Video(
     val id: Int,
     @SerializedName("results")
     @Expose
-    val results: List<Trailer>
+    val results: List<Trailer>?
 )

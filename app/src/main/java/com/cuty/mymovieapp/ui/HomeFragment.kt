@@ -9,11 +9,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.appcompat.widget.SearchView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cuty.mymovieapp.R
@@ -74,9 +77,8 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
     }
 
     override fun onMovieClick(item: Movie, position: Int) {
-        Log.d("CLICK", "CLICK")
+        findNavController().navigate(R.id.movieFragment, bundleOf("movie" to item))
     }
-
     private fun setupObserver() {
         lifecycle.coroutineScope.launch {
             viewmodel.getListOfMovies
@@ -107,7 +109,7 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
         viewmodel.getMovieByName(name)
     }
 
-    private fun setUpPopular(popularButton: Button,topRatedButton: Button) {
+    private fun setUpPopular(popularButton: ImageButton,topRatedButton: ImageButton) {
         popularButton.setOnClickListener {
             viewmodel.getPopularListOfMovies()
             setupObserver()
@@ -116,10 +118,10 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
         }
     }
 
-    private fun setupTopRated(topRatedButton: Button, popularButton: Button) {
+    private fun setupTopRated(topRatedButton: ImageButton, popularButton: ImageButton) {
         topRatedButton.setOnClickListener {
             viewmodel.getTopRatedMovieList()
-            observeInternet()
+            setupObserver()
             //topRatedButton.isEnabled = false
             //popularButton.isEnabled = true
         }
@@ -131,7 +133,7 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
             value,
             this@HomeFragment
         )
-        binding!!.rvSuggestions.layoutManager = LinearLayoutManager(requireContext())
+        binding!!.rvSuggestions.layoutManager = GridLayoutManager(requireContext(),2)
     }
 
 }

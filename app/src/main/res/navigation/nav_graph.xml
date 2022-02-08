@@ -18,5 +18,14 @@
         android:id="@+id/homeFragment"
         android:name="com.cuty.mymovieapp.ui.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_movieFragment"
+            app:destination="@id/movieFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/movieFragment"
+        android:name="com.cuty.mymovieapp.ui.MovieFragment"
+        android:label="fragment_movie"
+        tools:layout="@layout/fragment_movie" />
 </navigation>
