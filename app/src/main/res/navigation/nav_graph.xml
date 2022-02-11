@@ -28,4 +28,9 @@
         android:name="com.cuty.mymovieapp.ui.MovieFragment"
         android:label="fragment_movie"
         tools:layout="@layout/fragment_movie" />
+    <activity
+        android:id="@+id/trailerActivity"
+        android:name="com.cuty.mymovieapp.ui.movieDetail.TrailerActivity"
+        android:label="activity_trailer"
+        tools:layout="@layout/activity_trailer" />
 </navigation>

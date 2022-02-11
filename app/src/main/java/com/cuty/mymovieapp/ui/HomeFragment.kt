@@ -1,5 +1,6 @@
 package com.cuty.mymovieapp.ui
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
@@ -8,9 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
-import android.widget.LinearLayout
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
@@ -26,9 +25,7 @@ import com.cuty.mymovieapp.databinding.FragmentHomeBinding
 import com.cuty.mymovieapp.presenter.MainViewModel
 import com.cuty.mymovieapp.ui.recycler.PopularAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -36,6 +33,7 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
 
     private var binding: FragmentHomeBinding? = null
     val viewmodel: MainViewModel by viewModels()
+    lateinit var mcontext: Context
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,37 +51,51 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentHomeBinding.bind(view)
+        mcontext = requireContext()
         observeInternet()
-        setupObserver()
         setupSearchView(binding!!.svSearchMovie)
-        setUpPopular(binding!!.buPopular,binding!!.buTopRated)
-        setupTopRated(binding!!.buTopRated,binding!!.buPopular)
+        setUpPopular(binding!!.buPopular, binding!!.buTopRated)
+        setupTopRated(binding!!.buTopRated, binding!!.buPopular)
     }
 
     fun observeInternet() {
         val connectivityManager =
             requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkConnection = NetworkConnection(connectivityManager)
-        networkConnection.observe(viewLifecycleOwner, { isConnected ->
+        networkConnection.observe(viewLifecycleOwner) { isConnected ->
             if (isConnected) {
                 Log.d("INTERNET", "OK connection")
-                viewmodel.viewModelScope.launch {
+                lifecycle.coroutineScope.launch {
                     viewmodel.actualDb()
+                    setupObserver()
                 }
             } else {
                 Log.d("INTERNET", "Disconnected")
             }
-        })
+        }
     }
 
     override fun onMovieClick(item: Movie, position: Int) {
-        findNavController().navigate(R.id.movieFragment, bundleOf("movie" to item))
+        Log.d(TAG, "Boton presionado $position")
+
+        try {
+            //findNavController().navigate(R.id.action_homeFragment_to_movieFragment, bundleOf("movie" to item))
+            findNavController().navigate(
+                R.id.action_homeFragment_to_movieFragment, bundleOf("movie" to item))
+
+
+        } catch (e: Exception) {
+            Log.d(TAG, "Falla porque ${e.message}")
+        }
     }
+
     private fun setupObserver() {
-        lifecycle.coroutineScope.launch {
+        viewmodel.viewModelScope.launch {
             viewmodel.getListOfMovies
-                .collect{
-                    setUpRecyclerView(it)
+                .collect { list ->
+                    if (list.isNotEmpty()) {
+                        setUpRecyclerView(list)
+                    }
                 }
         }
     }
@@ -109,7 +121,7 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
         viewmodel.getMovieByName(name)
     }
 
-    private fun setUpPopular(popularButton: ImageButton,topRatedButton: ImageButton) {
+    private fun setUpPopular(popularButton: ImageButton, topRatedButton: ImageButton) {
         popularButton.setOnClickListener {
             viewmodel.getPopularListOfMovies()
             setupObserver()
@@ -133,7 +145,7 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
             value,
             this@HomeFragment
         )
-        binding!!.rvSuggestions.layoutManager = GridLayoutManager(requireContext(),2)
+        binding!!.rvSuggestions.layoutManager = LinearLayoutManager(requireContext())
     }
 
 }

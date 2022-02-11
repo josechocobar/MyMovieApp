@@ -9,10 +9,10 @@ interface LocalDatabaseDao {
     @Query("SELECT * FROM movie_table ORDER BY idroom")
     fun getMovieList(): Flow<List<Movie>>
 
-    @Query("SELECT * FROM movie_table WHERE popular=:popular ORDER BY popularity")
+    @Query("SELECT * FROM movie_table WHERE popular=:popular ORDER BY idroom")
     fun getMovieList(popular:Boolean): Flow<List<Movie>>
 
-    @Query("SELECT * FROM movie_table WHERE top_rated=:topRated ORDER BY vote_average")
+    @Query("SELECT * FROM movie_table WHERE top_rated=:topRated ORDER BY idroom")
     fun getTopRatedMovieList(topRated : Boolean): Flow<List<Movie>>
 
     @Query("SELECT * FROM movie_table WHERE original_title=:originalTitle")

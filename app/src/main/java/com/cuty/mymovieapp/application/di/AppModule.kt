@@ -3,6 +3,7 @@ package com.cuty.mymovieapp.application.di
 import android.content.Context
 import android.net.ConnectivityManager
 import androidx.room.Room
+import com.cuty.mymovieapp.application.preferences.UserPreferences
 import com.cuty.mymovieapp.data.local.AppDatabase
 import dagger.Module
 import dagger.Provides
@@ -35,4 +36,8 @@ object AppModule {
     @Singleton
     @Provides
     fun provideContext(@ApplicationContext context: Context) = context
+
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(context: Context) = UserPreferences(context)
 }

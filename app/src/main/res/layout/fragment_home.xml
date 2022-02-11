@@ -105,14 +105,12 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_suggestions"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:orientation="vertical"
-            android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="@id/home_container"
             app:layout_constraintEnd_toEndOf="@id/home_container"
             app:layout_constraintStart_toStartOf="@id/home_container"

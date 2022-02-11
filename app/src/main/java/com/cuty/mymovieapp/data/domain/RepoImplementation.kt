@@ -3,6 +3,7 @@ package com.cuty.mymovieapp.data.domain
 import com.cuty.mymovieapp.data.local.LocalDataSource
 import com.cuty.mymovieapp.data.local.LocalDataSourceInterface
 import com.cuty.mymovieapp.data.local.LocalDatabaseDao
+import com.cuty.mymovieapp.data.models.Credits
 import com.cuty.mymovieapp.data.models.Movie
 import com.cuty.mymovieapp.data.models.MovieRequest
 import com.cuty.mymovieapp.data.models.Video
@@ -63,5 +64,9 @@ class RepoImplementation @Inject constructor(
 
     override suspend fun getMovieByOriginalTitle(name: String): Movie {
         return localDataSource.getMovieByOriginalTitle(name)
+    }
+
+    override suspend fun getCredits(id: Int): Credits {
+        return remoteDataSource.getCredits(id)
     }
 }
