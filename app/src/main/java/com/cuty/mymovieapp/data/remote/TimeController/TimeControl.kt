@@ -24,6 +24,11 @@ data class TimeControl(
         startDate = getReferenceDate()
         endLifeDateTime = setEndLifeDb(startDate!!)
     }
+
+    /*** Return a boolean value, it indicates if a LocalDate passed is old
+     * if is old , sets new time control parameters then return true
+     * if is not old return false
+     */
     fun decideTimeControl(questionDate: LocalTime): Boolean {
         return if (isDbOld(questionDate,endLifeDateTime!!)){
             setTimecontrol()

@@ -1,5 +1,6 @@
 package com.cuty.mymovieapp.data.remote
 
+import com.cuty.mymovieapp.data.models.Credits
 import com.cuty.mymovieapp.data.models.MovieRequest
 import com.cuty.mymovieapp.data.models.Video
 import retrofit2.http.GET
@@ -28,4 +29,11 @@ interface WebService {
         @Query("language") lang: String,
         @Query("page") page: Int
     ): MovieRequest
+
+    @GET("{movie_id}/credits")
+    suspend fun getCredits(
+        @Path("movie_id") id:Int,
+        @Query("api_key") key: String,
+        @Query("language") lang: String
+    ):Credits
 }

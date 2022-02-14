@@ -2,10 +2,12 @@ package com.cuty.mymovieapp.application.internetchecker
 
 import android.annotation.TargetApi
 import android.content.BroadcastReceiver
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.net.*
 import android.os.Build
+import android.util.Log
 import androidx.lifecycle.LiveData
 import javax.inject.Inject
 
@@ -26,7 +28,11 @@ class NetworkConnection @Inject constructor(private var connectivityManager : Co
 
     override fun onInactive() {
         super.onInactive()
-        connectivityManager.unregisterNetworkCallback(connectivityManagerCallback())
+        try {
+            connectivityManager.unregisterNetworkCallback(connectivityManagerCallback())
+        }catch (e:Exception){
+            Log.d(TAG,"Cannot unregister network callback")
+        }
     }
 
 

@@ -13,8 +13,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
 
-
-
     private lateinit var navController: NavController
 
 
@@ -31,9 +29,5 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
         navController = navHostFragment.navController
-
-
-
-
     }
 }

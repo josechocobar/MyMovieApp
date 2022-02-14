@@ -50,4 +50,14 @@ class RemoteDataSourceTest{
         }
     }
 
+    @Test
+    fun getCast(){
+        runBlocking {
+            val request = remoteDataSource.getCredits(634649)
+            println(request.cast[3])
+            println(request.crew[0])
+            Assert.assertNotNull(request)
+        }
+    }
+
 }

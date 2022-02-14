@@ -1,13 +1,11 @@
 package com.cuty.mymovieapp.data.models
 
-import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.parcelize.Parcelize
+import kotlinx.coroutines.flow.Flow
 
 @Entity(tableName = "movie_table")
-@Parcelize
 data class Movie(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "idroom")
     val idRoom : Int,
@@ -32,4 +30,4 @@ data class Movie(
     var popular: Boolean,
     @ColumnInfo(name = "top_rated")
     var topRated: Boolean
-) : Parcelable
+)

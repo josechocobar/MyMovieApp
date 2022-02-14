@@ -37,4 +37,5 @@ object ViewModelModule {
     fun bindTimeControl():TimeControl{
         return TimeControl()
     }
+
 }

@@ -12,9 +12,12 @@
         <entry key="..\:/practicas/android/MyMovieApp/app/src/main/res/drawable/ic_baseline_fire.xml" value="0.20092592592592592" />
         <entry key="..\:/practicas/android/MyMovieApp/app/src/main/res/drawable/ic_baseline_star_24.xml" value="0.20092592592592592" />
         <entry key="..\:/practicas/android/MyMovieApp/app/src/main/res/drawable/search_background.xml" value="0.16666666666666666" />
+        <entry key="..\:/practicas/android/MyMovieApp/app/src/main/res/layout/activity_trailer.xml" value="0.20416666666666666" />
         <entry key="..\:/practicas/android/MyMovieApp/app/src/main/res/layout/fragment_home.xml" value="0.25" />
-        <entry key="..\:/practicas/android/MyMovieApp/app/src/main/res/layout/fragment_movie.xml" value="0.19010416666666666" />
-        <entry key="..\:/practicas/android/MyMovieApp/app/src/main/res/layout/rv_card.xml" value="0.20416666666666666" />
+        <entry key="..\:/practicas/android/MyMovieApp/app/src/main/res/layout/fragment_movie.xml" value="0.1" />
+        <entry key="..\:/practicas/android/MyMovieApp/app/src/main/res/layout/rv_actors_item.xml" value="0.20416666666666666" />
+        <entry key="..\:/practicas/android/MyMovieApp/app/src/main/res/layout/rv_card.xml" value="0.1" />
+        <entry key="..\:/practicas/android/MyMovieApp/app/src/main/res/layout/rv_trailer.xml" value="0.1" />
       </map>
     </option>
   </component>
