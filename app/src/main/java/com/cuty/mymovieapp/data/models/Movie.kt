@@ -3,6 +3,7 @@ package com.cuty.mymovieapp.data.models
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.coroutines.flow.Flow
 
 @Entity(tableName = "movie_table")
 data class Movie(

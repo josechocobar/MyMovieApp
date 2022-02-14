@@ -32,7 +32,7 @@ class RepoImplementation @Inject constructor(
     override fun getMovieLocalList(): Flow<List<Movie>> {
         return localDataSource.getAllPopularMovies()
     }
-    override suspend fun getMovieById(idroom:Int):Movie{
+    override fun getMovieById(idroom:Int):Flow<Movie>{
         return localDataSource.getMovieById(idroom)
     }
 

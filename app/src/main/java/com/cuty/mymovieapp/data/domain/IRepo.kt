@@ -11,7 +11,7 @@ interface IRepo {
     fun getMovieLocalList(): Flow<List<Movie>>
     fun getPopularMovieList(type: Boolean): Flow<List<Movie>>
     fun getTopRatedMovieList(type: Boolean): Flow<List<Movie>>
-    suspend fun getMovieById(idroom: Int): Movie
+    fun getMovieById(idroom: Int): Flow<Movie>
     suspend fun getTrailer(id: Int): Video
     suspend fun getTopRated(key: String, lang: String, page: Int): MovieRequest
     fun getMovieByTitle(name: String): Flow<List<Movie>>

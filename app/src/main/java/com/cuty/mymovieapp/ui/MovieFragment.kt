@@ -1,11 +1,7 @@
 package com.cuty.mymovieapp.ui
 
 import android.content.ContentValues
-import android.content.ContentValues.TAG
-import android.content.Context
-import android.content.Intent
 import android.graphics.drawable.ClipDrawable.HORIZONTAL
-import android.graphics.drawable.ClipDrawable.VERTICAL
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -30,11 +26,12 @@ import com.cuty.mymovieapp.data.models.Trailer
 import com.cuty.mymovieapp.databinding.FragmentMovieBinding
 import com.cuty.mymovieapp.presenter.MovieViewModel
 import com.cuty.mymovieapp.ui.movieDetail.CastAdapter
-import com.cuty.mymovieapp.ui.movieDetail.TrailerActivity
 import com.cuty.mymovieapp.ui.movieDetail.TrailersAdapter
 import com.cuty.mymovieapp.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 
@@ -44,7 +41,7 @@ class MovieFragment : Fragment(), TrailersAdapter.OnTrailerClickListener,
     lateinit var binding: FragmentMovieBinding
     val viewmodel: MovieViewModel by viewModels()
 
-    var idmovie : Int?=null
+    var idmovie: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,12 +67,11 @@ class MovieFragment : Fragment(), TrailersAdapter.OnTrailerClickListener,
     }
 
     fun setData() {
-        lifecycle.coroutineScope.launch {
+        viewmodel.viewModelScope.launch {
             idmovie?.let {
-                viewmodel.getMovie(it).collect {
-                    movie->
-                    setupMovieData(movie)
-
+                viewmodel.getMovie(it)
+                viewmodel.movie.collect { value ->
+                    setupMovieData(value)
                 }
             }
         }
@@ -99,7 +95,6 @@ class MovieFragment : Fragment(), TrailersAdapter.OnTrailerClickListener,
                     setupTrailerRecyclerView(value)
                 }
             }
-
         }
     }
 
@@ -117,9 +112,12 @@ class MovieFragment : Fragment(), TrailersAdapter.OnTrailerClickListener,
     }
 
     fun setupMovieData(movie: Movie) {
+
         binding.tvName.text = movie.title
         Glide.with(requireContext()).load("${Constants.IMG_URL}${movie.poster_path}")
             .transform(RoundedCorners(200)).centerCrop().into(binding.ivFrontPage)
+
+
     }
 
     fun setupPersonsRecyclerView(listOfCast: List<Cast>) {
@@ -128,11 +126,11 @@ class MovieFragment : Fragment(), TrailersAdapter.OnTrailerClickListener,
             listOfCast,
             this
         )
-        binding.rvActors.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.rvActors.layoutManager = LinearLayoutManager(requireContext())
     }
 
     override fun onCastClick(actor: Cast, position: Int) {
-        Toast.makeText(requireContext(),"Hola caracolacast!",Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), "Hola caracolacast!", Toast.LENGTH_LONG).show()
 
         try {
             findNavController().navigate(R.id.trailerActivity)
@@ -143,7 +141,7 @@ class MovieFragment : Fragment(), TrailersAdapter.OnTrailerClickListener,
 
     override fun onTrailerClick(trailer: Trailer, position: Int) {
         Log.d(ContentValues.TAG, "Falla porque $position")
-        Toast.makeText(requireContext(),"Hola caracola! trailer",Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), "Hola caracola! trailer", Toast.LENGTH_LONG).show()
 
         try {
             findNavController().navigate(R.id.trailerActivity,

@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.cuty.mymovieapp.data.domain.RepoImplementation
 import com.cuty.mymovieapp.data.models.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -15,9 +17,10 @@ import javax.inject.Inject
 class MovieViewModel @Inject constructor(
     private val repoImplementation: RepoImplementation,
 ) : ViewModel() {
-    var listOfTrailers = flowOf<Video>()
+    var movie = flowOf<Movie>()
     var listOfCast = flowOf(emptyList<Cast>())
     var listOfCrew = flowOf(emptyList<Crew>())
+
     /*
     fun makeFlow() = flow {
         println("sending first value")
@@ -39,14 +42,18 @@ class MovieViewModel @Inject constructor(
         }
     }
      */
-    fun getMovie(id: Int) = flow{
-        try {
-            emit(repoImplementation.localDataSource.getMovieById(id))
-        }catch (e: Exception) {
-            println(e.message)
-        }
 
+    suspend fun getOneMovie(id: Int) = coroutineScope {
+        async {
+            repoImplementation.getMovieById(id)
+        }
     }
+
+    fun getMovie(id: Int) {
+        movie = repoImplementation.getMovieById(id)
+    }
+
+
     fun getTrailers(id: Int) = flow {
         try {
             repoImplementation.getTrailer(id).results?.let { it -> emit(filterYoutube(it)) }
@@ -54,16 +61,16 @@ class MovieViewModel @Inject constructor(
             println(e.message)
         }
     }
-    private fun filterYoutube(listOfTrailer:List<Trailer>):List<Trailer>{
+
+    private fun filterYoutube(listOfTrailer: List<Trailer>): List<Trailer> {
         return listOfTrailer.filter { it.site == "YouTube" }
     }
 
 
-
-    fun getCast(id: Int) = flow{
+    fun getCast(id: Int) = flow {
         try {
-            emit(repoImplementation.getCredits(id).cast.subList(0,3))
-        }catch (e:Exception){
+            emit(repoImplementation.getCredits(id).cast.subList(0, 3))
+        } catch (e: Exception) {
             println(e.message)
         }
     }

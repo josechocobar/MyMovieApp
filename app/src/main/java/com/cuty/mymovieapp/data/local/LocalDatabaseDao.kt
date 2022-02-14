@@ -18,8 +18,8 @@ interface LocalDatabaseDao {
     @Query("SELECT * FROM movie_table WHERE original_title=:originalTitle")
     suspend fun getMovieByOriginalTitle(originalTitle : String):Movie
 
-    @Query("SELECT * FROM movie_table WHERE idroom=:id ")
-    fun getMovieById(id:Int):Movie
+    @Query("SELECT * FROM movie_table WHERE id=:id ")
+    fun getMovieById(id:Int):Flow<Movie>
 
     @Query("SELECT * FROM movie_table WHERE title LIKE '%' || :title || '%'")
     fun getMovieListByName(title: String):Flow<List<Movie>>

@@ -9,7 +9,7 @@ class LocalDataSource @Inject constructor(var appdatadase:AppDatabase): LocalDat
         return appdatadase.localDatabaseDao().getMovieList()
     }
 
-    override suspend fun getMovieById(idRoom:Int): Movie {
+    override fun getMovieById(idRoom:Int): Flow<Movie> {
         return appdatadase.localDatabaseDao().getMovieById(idRoom)
     }
 

@@ -133,8 +133,6 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
         topRatedButton.setOnClickListener {
             viewmodel.getTopRatedMovieList()
             setupObserver()
-            //topRatedButton.isEnabled = false
-            //popularButton.isEnabled = true
         }
     }
 
@@ -144,7 +142,7 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
             value,
             this@HomeFragment
         )
-        binding!!.rvSuggestions.layoutManager = LinearLayoutManager(requireContext())
+        binding!!.rvSuggestions.layoutManager = GridLayoutManager(requireContext(),2)
     }
 
 }
