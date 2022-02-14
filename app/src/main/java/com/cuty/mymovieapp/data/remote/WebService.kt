@@ -30,7 +30,7 @@ interface WebService {
         @Query("page") page: Int
     ): MovieRequest
 
-    @GET("/movie/{movie_id}/credits")
+    @GET("{movie_id}/credits")
     suspend fun getCredits(
         @Path("movie_id") id:Int,
         @Query("api_key") key: String,

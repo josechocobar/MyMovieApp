@@ -6,28 +6,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.cuty.mymovieapp.R
 import com.cuty.mymovieapp.data.models.Trailer
-import com.cuty.mymovieapp.ui.recycler.BaseViewHolder
-import com.cuty.mymovieapp.utils.Constants.IMG_URL
+import com.cuty.mymovieapp.ui.recycler.TrailerBaseViewHolder
 
 class TrailersAdapter(
     private val context: Context,
     private val trailerList:List<Trailer>,
-    private val itemClickListener : OnTrailerClickListener
-) : RecyclerView.Adapter<BaseViewHolder<*>>(){
+    private val trailerClickListener : OnTrailerClickListener
+) : RecyclerView.Adapter<TrailerBaseViewHolder<*>>(){
     interface OnTrailerClickListener{
         fun onTrailerClick(trailer:Trailer, position:Int)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrailerViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrailerBaseViewHolder<*> {
         return TrailerViewHolder(
             LayoutInflater.from(context).inflate(R.layout.rv_trailer, parent,false)
         )
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
+    override fun onBindViewHolder(holder: TrailerBaseViewHolder<*>, position: Int) {
         when(holder){
             is TrailerViewHolder -> trailerList[position].let {
                 holder.bind(it,position)
@@ -38,12 +36,12 @@ class TrailersAdapter(
     override fun getItemCount(): Int {
         return trailerList.size
     }
-    inner class TrailerViewHolder(itemView:View) : BaseViewHolder<Trailer>(itemView){
+    inner class TrailerViewHolder(itemView:View) : TrailerBaseViewHolder<Trailer>(itemView){
         val trailerName : TextView = itemView.findViewById(R.id.tv_trailer_number)
         override fun bind(item: Trailer, position: Int) {
             trailerName.text = item.name
             itemView.setOnClickListener {
-                itemClickListener.onTrailerClick(item,position)
+                trailerClickListener.onTrailerClick(item,position)
             }
         }
 

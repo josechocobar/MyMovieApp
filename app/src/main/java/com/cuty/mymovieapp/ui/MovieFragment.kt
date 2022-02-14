@@ -2,48 +2,57 @@ package com.cuty.mymovieapp.ui
 
 import android.content.ContentValues
 import android.content.ContentValues.TAG
+import android.content.Context
+import android.content.Intent
+import android.graphics.drawable.ClipDrawable.HORIZONTAL
+import android.graphics.drawable.ClipDrawable.VERTICAL
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.cuty.mymovieapp.R
 import com.cuty.mymovieapp.data.models.Cast
-import com.cuty.mymovieapp.data.models.Crew
 import com.cuty.mymovieapp.data.models.Movie
 import com.cuty.mymovieapp.data.models.Trailer
 import com.cuty.mymovieapp.databinding.FragmentMovieBinding
 import com.cuty.mymovieapp.presenter.MovieViewModel
 import com.cuty.mymovieapp.ui.movieDetail.CastAdapter
+import com.cuty.mymovieapp.ui.movieDetail.TrailerActivity
 import com.cuty.mymovieapp.ui.movieDetail.TrailersAdapter
 import com.cuty.mymovieapp.utils.Constants
-import com.cuty.mymovieapp.utils.URLType
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+
 
 @AndroidEntryPoint
-class MovieFragment : Fragment(),TrailersAdapter.OnTrailerClickListener,CastAdapter.OnTrailerClickListener {
-    private lateinit var binding : FragmentMovieBinding
-    val viewmodel:MovieViewModel by viewModels()
-    var movie : Movie?=null
-    lateinit var urlType : URLType
+class MovieFragment : Fragment(), TrailersAdapter.OnTrailerClickListener,
+    CastAdapter.OnTrailerClickListener {
+    lateinit var binding: FragmentMovieBinding
+    val viewmodel: MovieViewModel by viewModels()
+
+    var idmovie : Int?=null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            bundle -> movie = bundle.getParcelable<Movie>("movie")
+        arguments?.let { bundle ->
+            idmovie = bundle.getInt("id")
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -57,30 +66,43 @@ class MovieFragment : Fragment(),TrailersAdapter.OnTrailerClickListener,CastAdap
         binding = FragmentMovieBinding.bind(view)
         setData()
         setupObserver()
+        castObserver()
+    }
 
-    }
-    fun setData(){
-        movie?.let {
-            viewmodel.setMovieData(it.id)
-            setupMovieData(it)
-        }
-    }
-    fun setupObserver(){
-        viewmodel.viewModelScope.launch {
-            viewmodel.listOfTrailers.collect {
-                list->
-                list.isNotEmpty().let {
-                    setupTrailerRecyclerView(list)
-                }
-            }
-            viewmodel.listOfCast.collect {
-                cast-> val list = cast.subList(0,3)
-                cast.isNotEmpty().let {
-                    setupPersonsRecyclerView(list)
+    fun setData() {
+        lifecycle.coroutineScope.launch {
+            idmovie?.let {
+                viewmodel.getMovie(it).collect {
+                    movie->
+                    setupMovieData(movie)
+
                 }
             }
         }
     }
+
+    fun castObserver() {
+        lifecycle.coroutineScope.launch {
+            idmovie?.let {
+                viewmodel.getCast(it).collect { value ->
+                    setupPersonsRecyclerView(value)
+                }
+            }
+
+        }
+    }
+
+    fun setupObserver() {
+        lifecycle.coroutineScope.launch {
+            idmovie?.let {
+                viewmodel.getTrailers(it).collect { value ->
+                    setupTrailerRecyclerView(value)
+                }
+            }
+
+        }
+    }
+
     fun setupTrailerRecyclerView(list: List<Trailer>) {
         binding.rvTrailers.adapter = TrailersAdapter(
             requireContext(),
@@ -88,27 +110,44 @@ class MovieFragment : Fragment(),TrailersAdapter.OnTrailerClickListener,CastAdap
             this
         )
         binding.rvTrailers.layoutManager = LinearLayoutManager(requireContext())
+        val decoration =
+            DividerItemDecoration(requireContext(),
+                HORIZONTAL)
+        binding.rvTrailers.addItemDecoration(decoration)
     }
-    fun setupMovieData(movie:Movie){
+
+    fun setupMovieData(movie: Movie) {
         binding.tvName.text = movie.title
-        Glide.with(requireContext()).load("${Constants.IMG_URL}${movie.poster_path}").transform(RoundedCorners(200)).centerCrop().into(binding.ivFrontPage)
+        Glide.with(requireContext()).load("${Constants.IMG_URL}${movie.poster_path}")
+            .transform(RoundedCorners(200)).centerCrop().into(binding.ivFrontPage)
     }
-    fun setupPersonsRecyclerView(listOfCast: List<Cast>){
+
+    fun setupPersonsRecyclerView(listOfCast: List<Cast>) {
         binding.rvActors.adapter = CastAdapter(
             requireContext(),
             listOfCast,
             this
         )
+        binding.rvActors.layoutManager = GridLayoutManager(requireContext(), 2)
     }
 
     override fun onCastClick(actor: Cast, position: Int) {
-        Log.d(TAG,"OnCast Clicker")
+        Toast.makeText(requireContext(),"Hola caracolacast!",Toast.LENGTH_LONG).show()
+
+        try {
+            findNavController().navigate(R.id.trailerActivity)
+        } catch (e: Exception) {
+            Log.d(ContentValues.TAG, "Falla porque ${e.message}")
+        }
     }
 
     override fun onTrailerClick(trailer: Trailer, position: Int) {
+        Log.d(ContentValues.TAG, "Falla porque $position")
+        Toast.makeText(requireContext(),"Hola caracola! trailer",Toast.LENGTH_LONG).show()
+
         try {
-            findNavController().navigate(
-                R.id.trailerActivity, bundleOf("key" to trailer.key))
+            findNavController().navigate(R.id.trailerActivity,
+                bundleOf("key" to trailer.key))
         } catch (e: Exception) {
             Log.d(ContentValues.TAG, "Falla porque ${e.message}")
         }

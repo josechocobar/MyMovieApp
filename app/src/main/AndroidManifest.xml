@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
 
     <application
         android:name=".application.CustomApplication"
@@ -16,8 +16,8 @@
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         <activity
             android:name=".ui.movieDetail.TrailerActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:exported="true"
+            android:screenOrientation="fullSensor"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

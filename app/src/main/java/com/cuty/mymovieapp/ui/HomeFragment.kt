@@ -79,11 +79,9 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
         Log.d(TAG, "Boton presionado $position")
 
         try {
-            //findNavController().navigate(R.id.action_homeFragment_to_movieFragment, bundleOf("movie" to item))
             findNavController().navigate(
-                R.id.action_homeFragment_to_movieFragment, bundleOf("movie" to item))
-
-
+                R.id.action_homeFragment_to_movieFragment,
+                bundleOf("id" to item.id))
         } catch (e: Exception) {
             Log.d(TAG, "Falla porque ${e.message}")
         }
@@ -99,6 +97,7 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
                 }
         }
     }
+
 
     private fun setupSearchView(view: SearchView) {
         view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

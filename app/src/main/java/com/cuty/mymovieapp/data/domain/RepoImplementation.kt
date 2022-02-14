@@ -8,6 +8,8 @@ import com.cuty.mymovieapp.data.models.Movie
 import com.cuty.mymovieapp.data.models.MovieRequest
 import com.cuty.mymovieapp.data.models.Video
 import com.cuty.mymovieapp.data.remote.RemoteDataSourceInt
+import com.cuty.mymovieapp.utils.Constants.API_KEY
+import com.cuty.mymovieapp.utils.Constants.LANG_ENG
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -34,8 +36,8 @@ class RepoImplementation @Inject constructor(
         return localDataSource.getMovieById(idroom)
     }
 
-    override suspend fun getTrailer(id: Int,key:String,lang:String): Video {
-        return remoteDataSource.getTrailer(id,key,lang)
+    override suspend fun getTrailer(id: Int): Video {
+        return remoteDataSource.getTrailer(id,API_KEY, LANG_ENG)
     }
 
     override suspend fun getTopRated(key:String,lang:String,page:Int): MovieRequest {
