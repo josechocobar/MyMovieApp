@@ -112,12 +112,9 @@ class MovieFragment : Fragment(), TrailersAdapter.OnTrailerClickListener,
     }
 
     fun setupMovieData(movie: Movie) {
-
         binding.tvName.text = movie.title
         Glide.with(requireContext()).load("${Constants.IMG_URL}${movie.poster_path}")
             .transform(RoundedCorners(200)).centerCrop().into(binding.ivFrontPage)
-
-
     }
 
     fun setupPersonsRecyclerView(listOfCast: List<Cast>) {
