@@ -52,10 +52,14 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentHomeBinding.bind(view)
         mcontext = requireContext()
+        /*
         observeInternet()
         setupSearchView(binding!!.svSearchMovie)
+
         setUpPopular(binding!!.buPopular, binding!!.buTopRated)
         setupTopRated(binding!!.buTopRated, binding!!.buPopular)
+
+         */
     }
 
     fun observeInternet() {
@@ -66,7 +70,7 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
             if (isConnected) {
                 Log.d("INTERNET", "OK connection")
                 lifecycle.coroutineScope.launch {
-                    viewmodel.actualDb()
+                    //viewmodel.actualDb()
                     setupObserver()
                 }
             } else {
@@ -89,15 +93,17 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
 
     private fun setupObserver() {
         viewmodel.viewModelScope.launch {
-            viewmodel.getListOfMovies
+            /*viewmodel.getListOfMovies
                 .collect { list ->
                     if (list.isNotEmpty()) {
                         setUpRecyclerView(list)
                     }
                 }
+
+             */
         }
     }
-
+/*
 
     private fun setupSearchView(view: SearchView) {
         view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -116,10 +122,14 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
 
     }
 
+ */
+/*
     private fun setUpNameObserver(name: String) {
         viewmodel.getMovieByName(name)
     }
 
+ */
+/*
     private fun setUpPopular(popularButton: ImageButton, topRatedButton: ImageButton) {
         popularButton.setOnClickListener {
             viewmodel.getPopularListOfMovies()
@@ -129,12 +139,17 @@ class HomeFragment : Fragment(), PopularAdapter.OnMovieItemClickListener {
         }
     }
 
+
+
+
     private fun setupTopRated(topRatedButton: ImageButton, popularButton: ImageButton) {
         topRatedButton.setOnClickListener {
             viewmodel.getTopRatedMovieList()
             setupObserver()
         }
     }
+
+ */
 
     fun setUpRecyclerView(value: List<Movie>) {
         binding?.rvSuggestions?.adapter = PopularAdapter(

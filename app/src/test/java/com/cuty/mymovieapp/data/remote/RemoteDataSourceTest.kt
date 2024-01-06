@@ -33,6 +33,15 @@ class RemoteDataSourceTest{
 
     }
     @Test
+    fun getNullorError(){
+        runBlocking {
+            val request = remoteDataSource.getPopularMovies("one",lang,page)
+            print(request)
+            Assert.assertNotNull(request)
+            print(request.message)
+        }
+    }
+    @Test
     fun getVideos(){
         runBlocking {
             val request = remoteDataSource.getTrailer(634649,key,lang)

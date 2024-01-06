@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 @Entity(tableName = "movie_table")
 data class Movie(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "idroom")
-    val idRoom : Int,
+    val id_room : Int,
     val adult: Boolean,
     val backdrop_path: String,
     val genre_ids: List<Int>,

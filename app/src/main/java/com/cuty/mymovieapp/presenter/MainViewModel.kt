@@ -9,7 +9,6 @@ import com.cuty.mymovieapp.data.models.Movie
 import com.cuty.mymovieapp.data.models.Trailer
 import com.cuty.mymovieapp.data.models.Video
 import com.cuty.mymovieapp.data.remote.TimeController.TimeControl
-import com.cuty.mymovieapp.data.remote.cases.Cases
 import com.cuty.mymovieapp.utils.Constants.API_KEY
 import com.cuty.mymovieapp.utils.Constants.LANG_ENG
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,8 +22,16 @@ import kotlin.Exception
 class MainViewModel @Inject constructor(
     private val repoImplementation: RepoImplementation, private var time: TimeControl,private val userPreferences: UserPreferences
 ) : ViewModel() {
+
+
+    /*
     var listOfTrailers: Flow<List<Trailer>> = flow { emptyList<Movie>() }
     var getListOfMovies: Flow<List<Movie>> = flow { emptyList<Movie>() }
+
+
+
+
+
 
     init {
         time.setTimecontrol()
@@ -145,5 +152,7 @@ class MainViewModel @Inject constructor(
         }
         Log.d(ContentValues.TAG, "upgraded db")
     }
+
+     */
 
 }

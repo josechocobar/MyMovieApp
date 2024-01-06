@@ -10,6 +10,7 @@ import com.cuty.mymovieapp.data.models.Video
 import com.cuty.mymovieapp.data.remote.RemoteDataSourceInt
 import com.cuty.mymovieapp.utils.Constants.API_KEY
 import com.cuty.mymovieapp.utils.Constants.LANG_ENG
+import com.cuty.mymovieapp.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -17,10 +18,9 @@ class RepoImplementation @Inject constructor(
     val remoteDataSource: RemoteDataSourceInt,
     val localDataSource: LocalDataSourceInterface
 ) : IRepo {
-    override suspend fun getMovieList(key:String,lang:String,page:Int): MovieRequest {
-        return remoteDataSource.getPopularMovies(key,lang,page)
-    }
-
+    /*
+    local
+     */
     override fun getPopularMovieList(type: Boolean): Flow<List<Movie>> {
         return localDataSource.getOnlyPopularMovies(true)
     }
@@ -35,15 +35,6 @@ class RepoImplementation @Inject constructor(
     override fun getMovieById(idroom:Int):Flow<Movie>{
         return localDataSource.getMovieById(idroom)
     }
-
-    override suspend fun getTrailer(id: Int): Video {
-        return remoteDataSource.getTrailer(id,API_KEY, LANG_ENG)
-    }
-
-    override suspend fun getTopRated(key:String,lang:String,page:Int): MovieRequest {
-        return remoteDataSource.getTopRated(key,lang,page)
-    }
-
     override fun getMovieByTitle(name: String): Flow<List<Movie>> {
         return localDataSource.getMovieByTitle(name)
     }
@@ -67,6 +58,28 @@ class RepoImplementation @Inject constructor(
     override suspend fun getMovieByOriginalTitle(name: String): Movie {
         return localDataSource.getMovieByOriginalTitle(name)
     }
+    /*
+    remote
+     */
+
+    /***
+     *
+     */
+    override suspend fun getMovieList(key:String,lang:String,page:Int): Resource<MovieRequest> {
+        return remoteDataSource.getPopularMovies(key, lang, page)
+    }
+
+
+
+    override suspend fun getTrailer(id: Int): Video {
+        return remoteDataSource.getTrailer(id,API_KEY, LANG_ENG)
+    }
+
+    override suspend fun getTopRated(key:String,lang:String,page:Int): MovieRequest {
+        return remoteDataSource.getTopRated(key,lang,page)
+    }
+
+
 
     override suspend fun getCredits(id: Int): Credits {
         return remoteDataSource.getCredits(id)

@@ -15,7 +15,7 @@ object RetrofitService {
         .callTimeout(60,TimeUnit.SECONDS)
         .build()
 
-    val webService : WebService by lazy {
+    val                             webService : WebService by lazy {
         Retrofit.Builder()
             .baseUrl(API_URL)
             .client(client)

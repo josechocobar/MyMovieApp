@@ -4,7 +4,7 @@ import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.view.View
 
-class MyAnimator {
+class Animations {
     fun totalAnimations(view: View){
         translater(view)
         rotater(view)

@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.cuty.mymovieapp.R
-import com.cuty.mymovieapp.animations.MyAnimator
+import com.cuty.mymovieapp.animations.Animations
 import com.cuty.mymovieapp.databinding.FragmentSplashBinding
 import com.cuty.mymovieapp.presenter.SplashViewModel
 import kotlinx.coroutines.flow.catch
@@ -38,7 +38,7 @@ class SplashFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSplashBinding.bind(view)
         mLogo = binding.mlogo
-        val animator = MyAnimator()
+        val animator = Animations()
         animator.totalAnimations(mLogo)
         lifecycleScope.launch {
             viewmodel.isLoading.catch {}

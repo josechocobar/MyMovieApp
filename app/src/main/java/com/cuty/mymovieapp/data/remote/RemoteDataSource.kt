@@ -5,10 +5,15 @@ import com.cuty.mymovieapp.data.models.MovieRequest
 import com.cuty.mymovieapp.data.models.Video
 import com.cuty.mymovieapp.utils.Constants.API_KEY
 import com.cuty.mymovieapp.utils.Constants.LANG_ENG
+import com.cuty.mymovieapp.utils.Resource
 
 class RemoteDataSource() : RemoteDataSourceInt {
-    override suspend fun getPopularMovies(key: String, lang: String, page: Int): MovieRequest {
-        return RetrofitService.webService.getPopularMovies(key, lang, page)
+    override suspend fun getPopularMovies(key: String, lang: String, page: Int): Resource<MovieRequest> {
+        return try {
+            Resource.Success(RetrofitService.webService.getPopularMovies(key, lang, page))
+        }catch (e:Exception){
+            Resource.Error(message = e.message.toString(),null)
+        }
     }
 
     override suspend fun getTrailer(id: Int, key: String, lang: String): Video {

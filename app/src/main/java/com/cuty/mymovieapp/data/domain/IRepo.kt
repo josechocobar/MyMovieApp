@@ -4,10 +4,11 @@ import com.cuty.mymovieapp.data.models.Credits
 import com.cuty.mymovieapp.data.models.Movie
 import com.cuty.mymovieapp.data.models.MovieRequest
 import com.cuty.mymovieapp.data.models.Video
+import com.cuty.mymovieapp.utils.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface IRepo {
-    suspend fun getMovieList(key: String, lang: String, page: Int): MovieRequest
+    suspend fun getMovieList(key: String, lang: String, page: Int): Resource<MovieRequest>
     fun getMovieLocalList(): Flow<List<Movie>>
     fun getPopularMovieList(type: Boolean): Flow<List<Movie>>
     fun getTopRatedMovieList(type: Boolean): Flow<List<Movie>>
